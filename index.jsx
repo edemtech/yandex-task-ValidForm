@@ -45,7 +45,7 @@ class App extends React.Component {
             this.sendRequest(e.currentTarget.action);
         }
     }
-    setData(e) {
+    handleChange(e) {
         this.setState({[e.target.name]: e.target.value});
     }
     sendRequest(url){
