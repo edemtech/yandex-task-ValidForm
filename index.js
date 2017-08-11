@@ -160,17 +160,16 @@
 	        value: function sendRequest(url) {
 	            var _this2 = this;
 
-	            fetch(url).then(function (response) {
-	                return response.json();
-	            }).then(function (json) {
-	                _this2.setState({ status: json.status, reason: json.reason });
-	                if (json.status === "progress") {
-	                    console.log('hi');
-	                    setTimeout(function () {
-	                        _this2.sendRequest(url);
-	                    }, Number(json.timeout));
-	                }
-	            });
+	            var xhr = new XMLHttpRequest();
+	            xhr.open('GET', url, false);
+	            xhr.send();
+	            var json = JSON.parse(xhr.responseText);
+	            this.setState({ status: json.status, reason: json.reason });
+	            if (json.status === "progress") {
+	                setTimeout(function () {
+	                    _this2.sendRequest(url);
+	                }, Number(json.timeout));
+	            }
 	        }
 	    }, {
 	        key: 'fioKeyUp',

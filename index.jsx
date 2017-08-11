@@ -45,22 +45,18 @@ class App extends React.Component {
             this.sendRequest(e.currentTarget.action);
         }
     }
-
-    handleChange(e) {
+    setData(e) {
         this.setState({[e.target.name]: e.target.value});
     }
     sendRequest(url){
-        fetch(url)
-            .then( response => {
-                return response.json();
-            })
-            .then( json => {
-                this.setState({status: json.status, reason: json.reason});
-                if( json.status==="progress" ){
-                    console.log('hi');
-                    setTimeout( () => { this.sendRequest(url) } , Number(json.timeout) );
-                }
-            });
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, false);
+        xhr.send();
+        let json = JSON.parse(xhr.responseText);
+        this.setState({status: json.status, reason: json.reason});
+        if ( json.status==="progress" ) {
+            setTimeout( () => { this.sendRequest(url) } , Number(json.timeout) );
+        }
     }
     fioKeyUp(e) {
         e.currentTarget.value = e.currentTarget.value.replace(/[^a-zA-Za-яА-Я\s@]+/, '');
