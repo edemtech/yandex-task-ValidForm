@@ -87,12 +87,34 @@
 	            reason: ''
 	        };
 	        window.MyForm = _this;
+	        _this.getData = _this.getData.bind(_this);
+	        _this.setData = _this.setData.bind(_this);
+	        _this.validate = _this.validate.bind(_this);
 	        _this.submit = _this.submit.bind(_this);
 	        _this.handleChange = _this.handleChange.bind(_this);
 	        return _this;
 	    }
 
 	    _createClass(App, [{
+	        key: 'getData',
+	        value: function getData() {
+	            var data = {
+	                fio: this.inputFio.value,
+	                email: this.inputEmail.value,
+	                phone: this.inputPhone.props.value
+	            };
+	            return data;
+	        }
+	    }, {
+	        key: 'setData',
+	        value: function setData(data) {
+	            this.setState({
+	                fio: data.fio,
+	                email: data.email,
+	                phone: data.phone
+	            });
+	        }
+	    }, {
 	        key: 'validate',
 	        value: function validate() {
 	            var _state = this.state,
@@ -141,13 +163,12 @@
 	        }
 	    }, {
 	        key: 'submit',
-	        value: function submit(e) {
-	            e.preventDefault();
+	        value: function submit() {
 	            var validate = this.validate();
 	            this.setState({ errorFields: validate.errorFields });
 	            if (validate.isValid) {
-	                document.getElementById('submitButton').setAttribute('disabled', 'disabled');
-	                this.sendRequest(e.currentTarget.action);
+	                this.inputSubmit.setAttribute('disabled', 'disabled');
+	                this.sendRequest(this.formData.action);
 	            }
 	        }
 	    }, {
@@ -161,15 +182,21 @@
 	            var _this2 = this;
 
 	            var xhr = new XMLHttpRequest();
-	            xhr.open('GET', url, false);
+	            xhr.open('GET', url, true);
 	            xhr.send();
-	            var json = JSON.parse(xhr.responseText);
-	            this.setState({ status: json.status, reason: json.reason });
-	            if (json.status === "progress") {
-	                setTimeout(function () {
-	                    _this2.sendRequest(url);
-	                }, Number(json.timeout));
-	            }
+	            xhr.onload = function () {
+	                if (xhr.status === 200) {
+	                    var json = JSON.parse(xhr.responseText);
+	                    _this2.setState({ status: json.status, reason: json.reason });
+	                    if (json.status === "progress") {
+	                        setTimeout(function () {
+	                            _this2.sendRequest(url);
+	                        }, Number(json.timeout));
+	                    }
+	                } else {
+	                    console.error();
+	                }
+	            };
 	        }
 	    }, {
 	        key: 'fioKeyUp',
@@ -179,6 +206,8 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var _this3 = this;
+
 	            var errorFields = this.state.errorFields;
 
 	            var resultContainer = this.state.status == 'success' ? _react2.default.createElement(
@@ -209,7 +238,9 @@
 	            ) : '';
 	            return _react2.default.createElement(
 	                'form',
-	                { className: 'col-sm-3 panel', action: 'progress.json', onSubmit: this.submit },
+	                { className: 'col-sm-3 panel', action: 'progress.json', onSubmit: this.submit, ref: function ref(form) {
+	                        _this3.formData = form;
+	                    } },
 	                resultContainer,
 	                _react2.default.createElement(
 	                    'div',
@@ -226,7 +257,10 @@
 	                        placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0424\u0418\u041E',
 	                        value: this.state.fio,
 	                        onChange: this.handleChange,
-	                        onKeyUp: this.fioKeyUp })
+	                        onKeyUp: this.fioKeyUp,
+	                        ref: function ref(input) {
+	                            _this3.inputFio = input;
+	                        } })
 	                ),
 	                _react2.default.createElement(
 	                    'div',
@@ -242,7 +276,10 @@
 	                        className: "form-control " + (errorFields.includes('email') ? 'error' : ''),
 	                        placeholder: '\u0412\u0432\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u043E\u0447\u0442\u0443',
 	                        value: this.state.email,
-	                        onChange: this.handleChange })
+	                        onChange: this.handleChange,
+	                        ref: function ref(input) {
+	                            _this3.inputEmail = input;
+	                        } })
 	                ),
 	                _react2.default.createElement(
 	                    'div',
@@ -259,9 +296,18 @@
 	                        className: "form-control " + (errorFields.includes('phone') ? 'error' : ''),
 	                        placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043D\u043E\u043C\u0435\u0440',
 	                        value: this.state.phone,
-	                        onChange: this.handleChange })
+	                        onChange: this.handleChange,
+	                        ref: function ref(input) {
+	                            _this3.inputPhone = input;
+	                        } })
 	                ),
-	                _react2.default.createElement('input', { type: 'submit', id: 'submitButton', value: 'Submit', className: 'btn btn-primary' })
+	                _react2.default.createElement('input', { type: 'submit',
+	                    id: 'submitButton',
+	                    value: 'Submit',
+	                    className: 'btn btn-primary',
+	                    ref: function ref(input) {
+	                        _this3.inputSubmit = input;
+	                    } })
 	            );
 	        }
 	    }]);

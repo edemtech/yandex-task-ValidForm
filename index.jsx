@@ -14,8 +14,26 @@ class App extends React.Component {
             reason: ''
         }
         window.MyForm = this;
+        this.getData = this.getData.bind(this);
+        this.setData = this.setData.bind(this);
+        this.validate = this.validate.bind(this);
         this.submit = this.submit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+    }
+    getData() {
+        let data = {
+            fio: this.inputFio.value,
+            email: this.inputEmail.value,
+            phone: this.inputPhone.props.value,
+        }
+        return data;
+    }
+    setData(data) {
+        this.setState({
+            fio: data.fio,
+            email: data.email,
+            phone: data.phone,
+        });
     }
     validate() {
         let {fio, email, phone} = this.state;
@@ -36,13 +54,12 @@ class App extends React.Component {
             errorFields
         }
     }
-    submit(e) {
-        e.preventDefault();
+    submit() {
         let validate = this.validate();
         this.setState({errorFields: validate.errorFields})
         if ( validate.isValid ) {
-            document.getElementById('submitButton').setAttribute('disabled', 'disabled');
-            this.sendRequest(e.currentTarget.action);
+            this.inputSubmit.setAttribute('disabled', 'disabled');
+            this.sendRequest(this.formData.action);
         }
     }
     handleChange(e) {
@@ -50,13 +67,19 @@ class App extends React.Component {
     }
     sendRequest(url){
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', url, false);
+        xhr.open('GET', url, true);
         xhr.send();
-        let json = JSON.parse(xhr.responseText);
-        this.setState({status: json.status, reason: json.reason});
-        if ( json.status==="progress" ) {
-            setTimeout( () => { this.sendRequest(url) } , Number(json.timeout) );
-        }
+        xhr.onload = () => {
+            if ( xhr.status === 200 ) {
+                let json = JSON.parse(xhr.responseText);
+                this.setState({status: json.status, reason: json.reason});
+                if ( json.status==="progress" ) {
+                    setTimeout( () => { this.sendRequest(url) } , Number(json.timeout) );
+                }
+            } else {
+                console.error();
+            }
+        };
     }
     fioKeyUp(e) {
         e.currentTarget.value = e.currentTarget.value.replace(/[^a-zA-Za-яА-Я\s@]+/, '');
@@ -77,7 +100,7 @@ class App extends React.Component {
                         </div> : ''
         )
         return (
-            <form className="col-sm-3 panel" action="progress.json" onSubmit={this.submit}>
+            <form className="col-sm-3 panel" action="progress.json" onSubmit={this.submit} ref={(form) => {this.formData = form; }}>
                 {resultContainer}
                 <div className="form-group">
                     <label for="formGroupExampleInput">ФИО</label>
@@ -88,7 +111,8 @@ class App extends React.Component {
                         placeholder="Введите ФИО"
                         value={this.state.fio}
                         onChange={this.handleChange}
-                        onKeyUp={this.fioKeyUp}/>
+                        onKeyUp={this.fioKeyUp}
+                        ref={(input) => { this.inputFio = input; }}/>
                 </div>
                 <div className="form-group">
                     <label for="formGroupExampleInput2">Email</label>
@@ -98,7 +122,8 @@ class App extends React.Component {
                         className={"form-control "+(errorFields.includes('email')?'error':'')}
                         placeholder="Ввведите почту"
                         value={this.state.email}
-                        onChange={this.handleChange}/>
+                        onChange={this.handleChange}
+                        ref={(input) => { this.inputEmail = input; }}/>
                 </div>
                 <div className="form-group">
                     <label for="formGroupExampleInput2">Телефон</label>
@@ -109,9 +134,14 @@ class App extends React.Component {
                         className={"form-control "+(errorFields.includes('phone')?'error':'')}
                         placeholder="Введите номер"
                         value={this.state.phone}
-                        onChange={this.handleChange}/>
+                        onChange={this.handleChange}
+                        ref={(input) => { this.inputPhone = input; }}/>
                 </div>
-                <input type="submit" id="submitButton" value="Submit" className="btn btn-primary"/>
+                <input type="submit"
+                       id="submitButton"
+                       value="Submit"
+                       className="btn btn-primary"
+                       ref={(input) => { this.inputSubmit = input; }}/>
             </form>
         );
     }
