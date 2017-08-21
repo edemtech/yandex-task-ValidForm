@@ -87,23 +87,27 @@ class App extends React.Component {
 
     render() {
         let { errorFields } = this.state;
+
         const resultContainer = (
-            this.state.status == 'success' ?
+            this.state.status === 'success' ?
                 <div className="result-container alert alert-success">
                     <strong>Success</strong>
-                </div> : this.state.status === 'error' ?
+                </div> :
+                this.state.status === 'error' ?
                     <div className="result-container alert alert-danger">
                         <strong>Error. Reason:{this.state.reason}</strong>
-                    </div> : this.state.status === 'progress' ?
+                    </div> :
+                    this.state.status === 'progress' ?
                         <div className="result-container alert alert-warning">
                             <strong>In progress..</strong>
                         </div> : ''
-        )
+        );
+
         return (
-            <form className="col-sm-3 panel" action="progress.json" onSubmit={this.submit} ref={(form) => {this.formData = form; }}>
+            <form className="col-sm-3 panel" action="progress.json" onSubmit={this.submit} ref={ form =>this.formData = form }>
                 {resultContainer}
                 <div className="form-group">
-                    <label for="formGroupExampleInput">ФИО</label>
+                    <label>ФИО</label>
                     <input
                         type="text"
                         name="fio"
@@ -112,10 +116,10 @@ class App extends React.Component {
                         value={this.state.fio}
                         onChange={this.handleChange}
                         onKeyUp={this.fioKeyUp}
-                        ref={(input) => { this.inputFio = input; }}/>
+                        ref={ input => this.inputFio = input }/>
                 </div>
                 <div className="form-group">
-                    <label for="formGroupExampleInput2">Email</label>
+                    <label>Email</label>
                     <input
                         type="text"
                         name="email"
@@ -123,10 +127,10 @@ class App extends React.Component {
                         placeholder="Ввведите почту"
                         value={this.state.email}
                         onChange={this.handleChange}
-                        ref={(input) => { this.inputEmail = input; }}/>
+                        ref={ input => this.inputEmail = input }/>
                 </div>
                 <div className="form-group">
-                    <label for="formGroupExampleInput2">Телефон</label>
+                    <label>Телефон</label>
                     <MaskedInput
                         mask="+7(111)111-11-11"
                         type="text"
@@ -135,13 +139,13 @@ class App extends React.Component {
                         placeholder="Введите номер"
                         value={this.state.phone}
                         onChange={this.handleChange}
-                        ref={(input) => { this.inputPhone = input; }}/>
+                        ref={ input => this.inputPhone = input }/>
                 </div>
                 <input type="submit"
                        id="submitButton"
                        value="Submit"
                        className="btn btn-primary"
-                       ref={(input) => { this.inputSubmit = input; }}/>
+                       ref={ input => this.inputSubmit = input }/>
             </form>
         );
     }

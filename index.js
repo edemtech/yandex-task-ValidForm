@@ -210,7 +210,8 @@
 
 	            var errorFields = this.state.errorFields;
 
-	            var resultContainer = this.state.status == 'success' ? _react2.default.createElement(
+
+	            var resultContainer = this.state.status === 'success' ? _react2.default.createElement(
 	                'div',
 	                { className: 'result-container alert alert-success' },
 	                _react2.default.createElement(
@@ -236,10 +237,11 @@
 	                    'In progress..'
 	                )
 	            ) : '';
+
 	            return _react2.default.createElement(
 	                'form',
 	                { className: 'col-sm-3 panel', action: 'progress.json', onSubmit: this.submit, ref: function ref(form) {
-	                        _this3.formData = form;
+	                        return _this3.formData = form;
 	                    } },
 	                resultContainer,
 	                _react2.default.createElement(
@@ -247,7 +249,7 @@
 	                    { className: 'form-group' },
 	                    _react2.default.createElement(
 	                        'label',
-	                        { 'for': 'formGroupExampleInput' },
+	                        null,
 	                        '\u0424\u0418\u041E'
 	                    ),
 	                    _react2.default.createElement('input', {
@@ -259,7 +261,7 @@
 	                        onChange: this.handleChange,
 	                        onKeyUp: this.fioKeyUp,
 	                        ref: function ref(input) {
-	                            _this3.inputFio = input;
+	                            return _this3.inputFio = input;
 	                        } })
 	                ),
 	                _react2.default.createElement(
@@ -267,7 +269,7 @@
 	                    { className: 'form-group' },
 	                    _react2.default.createElement(
 	                        'label',
-	                        { 'for': 'formGroupExampleInput2' },
+	                        null,
 	                        'Email'
 	                    ),
 	                    _react2.default.createElement('input', {
@@ -278,7 +280,7 @@
 	                        value: this.state.email,
 	                        onChange: this.handleChange,
 	                        ref: function ref(input) {
-	                            _this3.inputEmail = input;
+	                            return _this3.inputEmail = input;
 	                        } })
 	                ),
 	                _react2.default.createElement(
@@ -286,7 +288,7 @@
 	                    { className: 'form-group' },
 	                    _react2.default.createElement(
 	                        'label',
-	                        { 'for': 'formGroupExampleInput2' },
+	                        null,
 	                        '\u0422\u0435\u043B\u0435\u0444\u043E\u043D'
 	                    ),
 	                    _react2.default.createElement(_reactMaskedinput2.default, {
@@ -298,7 +300,7 @@
 	                        value: this.state.phone,
 	                        onChange: this.handleChange,
 	                        ref: function ref(input) {
-	                            _this3.inputPhone = input;
+	                            return _this3.inputPhone = input;
 	                        } })
 	                ),
 	                _react2.default.createElement('input', { type: 'submit',
@@ -306,7 +308,7 @@
 	                    value: 'Submit',
 	                    className: 'btn btn-primary',
 	                    ref: function ref(input) {
-	                        _this3.inputSubmit = input;
+	                        return _this3.inputSubmit = input;
 	                    } })
 	            );
 	        }
